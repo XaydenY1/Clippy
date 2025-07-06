@@ -1,0 +1,32 @@
+# Compiled files
+*.dll
+*.exe
+*.pdb
+*.cache
+
+# PowerShell files
+*.ps1xml
+*.psm1
+*.psd1
+!Clippy.psm1
+!Clippy.psd1
+
+# PowerShell module directories
+/output/
+/debug/
+
+# Test Results
+/TestResults/
+
+# VS Code directories
+.vscode/
+.vs/
+
+# Temp files
+*.tmp
+*.temp
+*~
+
+# Operating System Files
+.DS_Store
+Thumbs.db
