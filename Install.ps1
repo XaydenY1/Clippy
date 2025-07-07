@@ -6,9 +6,19 @@ param (
 
 $ErrorActionPreference = 'Stop'
 
-# Define the installation path
-$installPath = "$env:ProgramFiles\ClippyDevTools"
-$modulePath = "$env:ProgramFiles\WindowsPowerShell\Modules\Clippy"
+# Define the installation paths based on OS
+if ($IsWindows) {
+    $installPath = "$env:ProgramFiles\ClippyDevTools"
+    $modulePath = "$env:ProgramFiles\PowerShell\Modules\Clippy"
+} elseif ($IsLinux) {
+    $installPath = "/opt/clippy"
+    $modulePath = "/usr/local/share/powershell/Modules/Clippy"
+} elseif ($IsMacOS) {
+    $installPath = "/usr/local/clippy"
+    $modulePath = "/usr/local/share/powershell/Modules/Clippy"
+} else {
+    throw "Unsupported operating system"
+}
 
 Write-Host "Installing Clippy Developer Tools..." -ForegroundColor Green
 

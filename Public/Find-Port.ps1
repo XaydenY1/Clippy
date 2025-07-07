@@ -13,11 +13,23 @@ function Find-Port {
     
     process {
         try {
-            $ports = Get-NetTCPConnection -ErrorAction SilentlyContinue | 
-                     Select-Object LocalPort, RemotePort, State, OwningProcess, @{
-                         Name='ProcessName';
-                         Expression={(Get-Process -Id $_.OwningProcess).ProcessName}
-                     }
+            # Cross-platform port checking
+            if ($IsWindows) {
+                $ports = Get-NetTCPConnection -ErrorAction SilentlyContinue | 
+                         Select-Object LocalPort, RemotePort, State, OwningProcess, @{
+                             Name='ProcessName';
+                             Expression={(Get-Process -Id $_.OwningProcess).ProcessName}
+                         }
+            } else {
+                # Use netstat on Linux/macOS
+                $netstatOutput = & netstat -tuln 2>&1
+                $ports = $netstatOutput | Select-String -Pattern ".*:(\d+).*" | ForEach-Object {
+                    $port = $_.Matches.Groups[1].Value
+                    [PSCustomObject]@{
+                        LocalPort = [int]$port
+                        State = "LISTEN"
+                    }
+                }
             
             if ($ShowAll) {
                 $availablePorts = $StartPort..$EndPort | Where-Object {

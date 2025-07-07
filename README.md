@@ -56,17 +56,38 @@ A powerful suite of PowerShell tools designed to enhance developer productivity.
 
 ## 📦 Installation
 
-1. Clone this repository or download the latest release
-2. Run the installer with administrator privileges:
+1. Clone this repository or download the latest release:
+   ```bash
+   git clone https://github.com/XaydenY1/Clippy.git
+   cd Clippy
+   ```
+
+2. Run the installer with appropriate privileges:
+
+   ### Windows
    ```powershell
-   Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"& '$PWD\Clippy\Install.ps1'`""
+   Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"& '$PWD\Install.ps1'`""
+   ```
+
+   ### Linux/macOS
+   ```bash
+   sudo pwsh -c "./Install.ps1"
    ```
 
 ## 🔧 Requirements
 
-- PowerShell 5.1 or later
-- Windows PowerShell or PowerShell Core
+### Windows
+- PowerShell 5.1 or later, or PowerShell Core 7.x
 - Administrator privileges for installation
+
+### Linux/macOS
+- PowerShell Core 7.x or later (pwsh)
+- Sudo privileges for installation
+- Additional requirements:
+  - `curl` or `wget` for some network operations
+  - Python 3.x for Python project templates
+  - Node.js for Node.js/React/Vue templates
+  - .NET SDK for .NET templates
 
 ## 📖 Usage
 
