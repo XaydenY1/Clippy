@@ -56,6 +56,20 @@ A powerful suite of PowerShell tools designed to enhance developer productivity.
 
 ## 📦 Installation
 
+### Using Prebuilt Packages (Recommended)
+
+#### Debian/Ubuntu Linux
+```bash
+# Download the latest .deb package
+wget https://github.com/XaydenY1/Clippy/releases/latest/download/clippy-devtools.deb
+
+# Install the package
+sudo dpkg -i clippy-devtools.deb
+sudo apt-get install -f # Install dependencies if needed
+```
+
+### Manual Installation
+
 1. Clone this repository or download the latest release:
    ```bash
    git clone https://github.com/XaydenY1/Clippy.git
@@ -64,12 +78,12 @@ A powerful suite of PowerShell tools designed to enhance developer productivity.
 
 2. Run the installer with appropriate privileges:
 
-   ### Windows
+   #### Windows
    ```powershell
    Start-Process powershell -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"& '$PWD\Install.ps1'`""
    ```
 
-   ### Linux/macOS
+   #### Linux/macOS
    ```bash
    sudo pwsh -c "./Install.ps1"
    ```

@@ -1,0 +1,69 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up PowerShell
+        uses: PowerShell/PowerShell@v1
+        with:
+          powershell-version: '7.3'
+
+      - name: Create Linux Package
+        run: |
+          # Create package directory structure
+          mkdir -p ./dist/linux/usr/local/share/powershell/Modules/Clippy
+          mkdir -p ./dist/linux/DEBIAN
+          
+          # Copy module files
+          cp -r ./Public ./dist/linux/usr/local/share/powershell/Modules/Clippy/
+          cp Clippy.ps* ./dist/linux/usr/local/share/powershell/Modules/Clippy/
+          
+          # Create control file
+          cat > ./dist/linux/DEBIAN/control << EOF
+          Package: clippy-devtools
+          Version: ${GITHUB_REF#refs/tags/v}
+          Architecture: all
+          Maintainer: Xayden Yagiela
+          Description: Clippy Developer Tools
+           A powerful suite of PowerShell tools designed to enhance developer productivity.
+          Depends: powershell (>= 7.0)
+          EOF
+          
+          # Create postinst script
+          cat > ./dist/linux/DEBIAN/postinst << EOF
+          #!/bin/sh
+          chmod 755 /usr/local/share/powershell/Modules/Clippy
+          EOF
+          chmod 755 ./dist/linux/DEBIAN/postinst
+          
+          # Build DEB package
+          dpkg-deb --build ./dist/linux clippy-devtools.deb
+          
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload DEB Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./clippy-devtools.deb
+          asset_name: clippy-devtools.deb
+          asset_content_type: application/vnd.debian.binary-package
